@@ -45,6 +45,7 @@ After you have committed, the **Git** window will no longer show the changes you
 
 There will be a message just below the toolbar, though, telling you that you are ahead of the `origin/master` branch. When you commit changes you are only modifying your local copy of the repository. You can work on the local copy with all the features provided by git and you can commit as often as you want, but the changes are not pushed upstream to GitHub until you press the **Push** button. This means that you can work on your code in private without having to interact with GitHub until you are ready to push, and then press **Push**. To hand in the exercises for this week, you will eventually have to **Push**, though.
 
+Please, though, **before you push for the final commit, make sure that you knit the README.Rmd file**. This ensures that the most recent README.md file -- which is the one displayed on the GitHub repository page -- is reflecting the most recent README.Rmd file.
 
 
 ## Exercises for chapther "More R programming"
