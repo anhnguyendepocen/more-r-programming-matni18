@@ -23,6 +23,30 @@ summary(cars)
 
 This R Markdown document is set up to output a Markdown file -- it will be named README.md -- and this file will be displayed on the github repository. We will use it for the chapter exercises in this class as an experiment, to see if learning github and Markdown along with other classes is a worthwile approach to the entire bioinformatics Masters' program. So please give it a chance and give plenty of feedback about the experience.
 
+For the exercises, just update this file and when you are done with the exercises, commit them to git and push the changes to github.
+
+## Pushing finished exercises to github
+
+You can commit and push your changes to github from RStudio. For the exercises in this repository you only need to change this one file, so you shouldn't have to worry about how to add new files -- we can deal with that later. You can see the changes you have made to the repository if you go to the **Git** tab in the upper right corner of RStudio.
+
+![Git window](figures/git-1.png)
+
+Newly added files are marked with `?` -- but you shouldn't see any -- and modified files are marked with `m`. To commit changes you need to *Stage* them. This just means that the staged files are the changes that will be committed next time you commit changes -- git prefers to make commits a two-stage process where you first pick what to commit and then commit it, the first step is staging the files. You can stage the files you want to commit by clicking on the check-boxes in the **Staged** column.
+
+![Stage files](figures/git-2.png)
+
+Now, to commit the files, just press the **Commit** button. This opens a window where you can see the changes you are about to commit and you can write a log message for the commit.
+
+![Commiting](figures/git-3.png)
+
+After you have committed, the **Git** window will no longer show the changes you commited. If you staged all the modified files, you will have an empty list of changes.
+
+![After committing](figures/git-4.png)
+
+There will be a message just below the toolbar, though, telling you that you are ahead of the `origin/master` branch. When you commit changes you are only modifying your local copy of the repository. You can work on the local copy with all the features provided by git and you can commit as often as you want, but the changes are not pushed upstream to GitHub until you press the **Push** button. This means that you can work on your code in private without having to interact with GitHub until you are ready to push, and then press **Push**. To hand in the exercises for this week, you will eventually have to **Push**, though.
+
+
+
 ## Exercises for chapther "More R programming"
 
 ### Fibonacci numbers
