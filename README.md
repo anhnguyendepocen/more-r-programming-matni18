@@ -42,20 +42,22 @@ After you have committed, the **Git** window will no longer show the changes you
 
 There will be a message just below the toolbar, though, telling you that you are ahead of the `origin/master` branch. When you commit changes you are only modifying your local copy of the repository. You can work on the local copy with all the features provided by git and you can commit as often as you want, but the changes are not pushed upstream to GitHub until you press the **Push** button. This means that you can work on your code in private without having to interact with GitHub until you are ready to push, and then press **Push**. To hand in the exercises for this week, you will eventually have to **Push**, though.
 
+Please, though, **before you push for the final commit, make sure that you knit the README.Rmd file**. This ensures that the most recent README.md file -- which is the one displayed on the GitHub repository page -- is reflecting the most recent README.Rmd file.
+
 Exercises for chapther "More R programming"
 -------------------------------------------
 
 ### Fibonacci numbers
 
-The *Fibonacci* numbers are defined as follows: The first two Fibonacci numbers are 1, *F*<sub>1</sub> = *F*<sub>2</sub> = 1. For larger Fibonacci numbers they are defined as *F*<sub>*i*</sub> = *F*<sub>*i* − 1</sub> + *F*<sub>*i* − 2</sub>.
+The *Fibonacci* numbers are defined as follows: The first two Fibonacci numbers are 1, \(F_1=F_2=1\). For larger Fibonacci numbers they are defined as \(F_i=F_{i-1}+F_{i-2}\).
 
-Implement a recursive function that computes the *n*'th Fibonacci number.
+Implement a recursive function that computes the \(n\)'th Fibonacci number.
 
-The recursive function for Fibonacci numbers is usually quite inefficient because you are recomputing the same numbers several times in the recursive calls. So implement another version that computes the *n*'th Fibonacci number iteratively (that is, start from the bottom and compute the numbers up to *n* without calling recursively).
+The recursive function for Fibonacci numbers is usually quite inefficient because you are recomputing the same numbers several times in the recursive calls. So implement another version that computes the \(n\)'th Fibonacci number iteratively (that is, start from the bottom and compute the numbers up to \(n\) without calling recursively).
 
 ### Outer product
 
-The outer product of two vectors, **v** and **w**, is a matrix defined as
+The outer product of two vectors, \(\mathbf{v}\) and \(\mathbf{w}\), is a matrix defined as
 
       v_1 * w_1, v_1 * w_2, v_1 * w_3, v_1 * w_4
       v_2 * w_1, v_2 * w_2, v_2 * w_3, v_2 * w_4
@@ -81,16 +83,16 @@ Before you start, though, you should be aware of something. If you plan to appen
 v <- c(v, element)
 ```
 
-then you will end up with a quadratic time algorithm again. This is because when you do this, you are actually creating a new vector where you first copy all the elements in the old `v` vector into the first elements and then add the `element` at the end. If you do this *n* times, you have spent on average order *n*<sup>2</sup> per operation. It is because people do something like this in loops, more than the R interpreter, that has given R its reputation for slow loops. You should never append to vectors unless there is no way to avoid it.
+then you will end up with a quadratic time algorithm again. This is because when you do this, you are actually creating a new vector where you first copy all the elements in the old `v` vector into the first elements and then add the `element` at the end. If you do this \(n\) times, you have spent on average order \(n^2\) per operation. It is because people do something like this in loops, more than the R interpreter, that has given R its reputation for slow loops. You should never append to vectors unless there is no way to avoid it.
 
-In the case of the merge function, we already know how long the result should be, so you can pre-allocate a result vector and copy single elements into it. You can create a vector of length *n* like this:
+In the case of the merge function, we already know how long the result should be, so you can pre-allocate a result vector and copy single elements into it. You can create a vector of length \(n\) like this:
 
 ``` r
 n <- 5
 v <- vector(length = n)
 ```
 
-Should you ever need it, you can make a list of length *n* like this
+Should you ever need it, you can make a list of length \(n\) like this
 
 ``` r
 vector("list", length = n)
@@ -116,11 +118,11 @@ If you implement this exactly as described, you have to call recursively with a 
 
 ### More sorting
 
-In the merge sort we implemented above, we solve the sorting problem by splitting a sequence in two, sorting each subsequence, and then merging them. If implemented correctly this algorithm will run in time *O*(*n*log*n*) which is optimal for sorting algorithms if we assume that the only operations we can do on the elements we sort are comparing them.
+In the merge sort we implemented above, we solve the sorting problem by splitting a sequence in two, sorting each subsequence, and then merging them. If implemented correctly this algorithm will run in time \(O(n \log n)\) which is optimal for sorting algorithms if we assume that the only operations we can do on the elements we sort are comparing them.
 
 #### Bucket sort
 
-If the elements we have are all integers between 1 and *n* and we have *m* of them, we can sort them in time *O*(*n* + *m*) using bucket sort instead. This algorithm first creates a vector of counts for each number between 1 and *n*. This takes time *O*(*n*). It then runs through the *m* elements in our sequence, updating the counter for number *i* each time it sees *i*. This runs in time *O*(*m*). Finally, it runs through these numbers from 1 up to *n* and outputting each number, the number of times indicated by the counters, in time *O*(*n* + *m*).
+If the elements we have are all integers between \(1\) and \(n\) and we have \(m\) of them, we can sort them in time \(O(n+m)\) using bucket sort instead. This algorithm first creates a vector of counts for each number between 1 and \(n\). This takes time \(O(n)\). It then runs through the \(m\) elements in our sequence, updating the counter for number \(i\) each time it sees \(i\). This runs in time \(O(m)\). Finally, it runs through these numbers from 1 up to \(n\) and outputting each number, the number of times indicated by the counters, in time \(O(n+m)\).
 
 Implement bucket sort.
 
@@ -132,7 +134,7 @@ Implement bucket sort.
 
 #### Quick sort
 
-Another algorithm that works by recursion, and that runs in expected time *O*(*n*log*n*), is quick sort. It's worst case complexity is actual *O*(*n*<sup>2</sup>) but on average it runs in time *O*(*n*log*n*) and with a smaller overhead than merge sort (if you implement it correctly).
+Another algorithm that works by recursion, and that runs in expected time \(O(n \log n)\), is quick sort. It's worst case complexity is actual \(O(n^2)\) but on average it runs in time \(O(n \log n)\) and with a smaller overhead than merge sort (if you implement it correctly).
 
 It works as follows: the basis case -- a single element -- is the same as merge sort. When you have more than one element you pick one of the elements in the sequence at random; call it the pivot. Now split the sequence into those elements that are smaller than the pivot, those that are equal to the pivot, and those that are larger. Sort the sequences of smaller and larger elements recursively. Then output all the sorted smaller elements, then the elements equal to the pivot, and then the sorted larger elements.
 
@@ -146,9 +148,9 @@ Implement quick sort.
 
 ### Selecting the k smallest element
 
-If you have *n* elements, and you want the *k* smallest, an easy solution is to sort the elements and then pick number *k*. This works well and in most cases is easily fast enough, but it is actually possible to do it faster. See, we don't actually need to sort the elements completely, we just need to have the *k* smallest element moved to position *k* in the sequence.
+If you have \(n\) elements, and you want the \(k\) smallest, an easy solution is to sort the elements and then pick number \(k\). This works well and in most cases is easily fast enough, but it is actually possible to do it faster. See, we don't actually need to sort the elements completely, we just need to have the \(k\) smallest element moved to position \(k\) in the sequence.
 
-The quick sort algorithm from the previous exercise can be modified to solve this problem. Whenever we split a sequence into those smaller than, equal to, and larger than the pivot, we sort the smaller and larger elements recursively. If we are only interested in finding the element that would eventually end up at position *k* in the sorted lists we don't need to sort the sequence that doesn't overlap this index. If we have *m* &lt; *k* elements smaller than the pivot, we can just put them at the front of the sequence without sorting them. We need them there to make sure that the *k*'th smallest element ends up at the right index, but we don't need them sorted. Similar, if *k* &lt; *m* we don't need to sort the larger elements. If we sorted them, they would all end up at indices larger than *k* and we don't really care about those. Of course, if there are *m* &lt; *k* elements smaller than the pivot and *l* equal to the pivot, with *m* + *l* ≥ *k*, then the *k* smallest element is equal to the pivot, and we can return that.
+The quick sort algorithm from the previous exercise can be modified to solve this problem. Whenever we split a sequence into those smaller than, equal to, and larger than the pivot, we sort the smaller and larger elements recursively. If we are only interested in finding the element that would eventually end up at position \(k\) in the sorted lists we don't need to sort the sequence that doesn't overlap this index. If we have \(m < k\) elements smaller than the pivot, we can just put them at the front of the sequence without sorting them. We need them there to make sure that the \(k\)'th smallest element ends up at the right index, but we don't need them sorted. Similar, if \(k < m\) we don't need to sort the larger elements. If we sorted them, they would all end up at indices larger than \(k\) and we don't really care about those. Of course, if there are \(m < k\) elements smaller than the pivot and \(l\) equal to the pivot, with \(m+l \geq k\), then the \(k\) smallest element is equal to the pivot, and we can return that.
 
 Implement this algorithm.
 

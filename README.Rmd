@@ -1,6 +1,6 @@
 ---
 title: "More R"
-author: "Your Name"
+author: "Matilde"
 date: "`r Sys.Date()`"
 output:
   md_document:
