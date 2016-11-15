@@ -1,6 +1,6 @@
 ---
 title: "More R"
-author: "Matilde"
+author: "Matilde Nielsen"
 date: "`r Sys.Date()`"
 output:
   md_document:
