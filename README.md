@@ -53,7 +53,62 @@ The *Fibonacci* numbers are defined as follows: The first two Fibonacci numbers 
 
 Implement a recursive function that computes the \(n\)'th Fibonacci number.
 
+``` r
+fibonacci = function(n){
+  if (n==1 | n==2){
+    fib=1
+  } else {
+    fib = fibonacci(n-1)+fibonacci(n-2)
+  }
+  return(fib)
+}
+
+#Testing:
+fibonacci(5) #5
+```
+
+    ## [1] 5
+
+``` r
+fibonacci(9) #34
+```
+
+    ## [1] 34
+
 The recursive function for Fibonacci numbers is usually quite inefficient because you are recomputing the same numbers several times in the recursive calls. So implement another version that computes the \(n\)'th Fibonacci number iteratively (that is, start from the bottom and compute the numbers up to \(n\) without calling recursively).
+
+``` r
+fibonacciIter = function(n){
+  fib = c(rep(0,n))
+  fib[1]=1
+  if (n>1){
+    fib[2]=1
+    if (n>2){
+      for (i in 3:n){
+        fib[i] = fib[i-1]+fib[i-2]
+      }
+    }
+  }
+  return(fib[n])
+}
+
+#Testing:
+fibonacciIter(2) # 1
+```
+
+    ## [1] 1
+
+``` r
+fibonacciIter(3) # 2
+```
+
+    ## [1] 2
+
+``` r
+fibonacciIter(12) # 144
+```
+
+    ## [1] 144
 
 ### Outer product
 
@@ -70,7 +125,36 @@ There actually is a built-in function, `outer`, that you are overwriting here. Y
 #### Solution
 
 ``` r
-# WRITE YOUR IMPLEMENTATION AND TEST HERE.
+outerProduct = function(v, w){
+  u = matrix(nrow=length(v), ncol=length(w))
+  for (i in seq_along(v)){
+    for (j in seq_along(w)){
+      u[i,j]=v[i]*w[j]
+    }
+  }
+  return(u)
+}
+
+#Testing:
+outerProduct(c(1,2,3), c(2,3,4,5))
+```
+
+    ##      [,1] [,2] [,3] [,4]
+    ## [1,]    2    3    4    5
+    ## [2,]    4    6    8   10
+    ## [3,]    6    9   12   15
+
+``` r
+outer(c(1,2,3), c(2,3,4,5))
+```
+
+    ##      [,1] [,2] [,3] [,4]
+    ## [1,]    2    3    4    5
+    ## [2,]    4    6    8   10
+    ## [3,]    6    9   12   15
+
+``` r
+#They give the same result
 ```
 
 ### Linear time merge
@@ -101,7 +185,136 @@ vector("list", length = n)
 #### Solution
 
 ``` r
-# WRITE YOUR IMPLEMENTATION AND TEST HERE.
+#My linear time merge function:
+myMerge = function(x,y){
+  n=length(x)+length(y)
+  result = vector(length=n) # vector to store the results
+  
+  i=1 #Index in x
+  j=1 #Index in y
+  
+  for (k in seq_along(result)){
+    if(i > length(x)){
+      #We are done with x
+      result[-(1:k-1)] = y[j:length(y)]
+      return(result)
+    }
+    if(j > length(y)){
+      #We are done with y
+      result[-(1:k-1)] = x[i:length(x)]
+      return(result)
+    }
+    if (x[i] < y[j]){
+      result[k] = x[i]
+      i = i+1
+    } else {
+      result[k] = y[j]
+      j = j+1
+    }
+  }
+  return(result)
+}
+
+#Original merge function:
+merge <- function(x, y) {
+  if (length(x) == 0) return(y)
+  if (length(y) == 0) return(x)
+  if (x[1] < y[1]) {
+    c(x[1], merge(x[-1], y))
+  } else {
+    c(y[1], merge(x, y[-1]))
+  }
+}
+
+#I split the mergeSort in two for use when evaluating time consumption:
+myMerge_sort <- function(x) {
+  if (length(x) < 2){
+    return(x)
+  }
+  n <- length(x)
+  m <- n %/% 2
+
+  myMerge(myMerge_sort(x[1:m]), myMerge_sort(x[(m+1):n]))
+}
+
+merge_sort <- function(x) {
+  if (length(x) < 2){
+    return(x)
+  }
+  n <- length(x)
+  m <- n %/% 2
+
+  merge(merge_sort(x[1:m]), merge_sort(x[(m+1):n]))
+}
+
+#Test of time:
+timing = matrix(ncol=2, nrow=50, dimnames = list(seq(1,2500, 50), c("originalMerge", "myMerge"))) # matrix to store results
+
+for (i in rownames(timing)){
+  #Generate random sequence of numbers 1-100 with length i to sort:
+  seqToSort = sample(1:100, i, replace=T)
+  
+  # Get timing for original merge function and insert into matrix:
+  time1 = proc.time()
+  merge_sort(seqToSort)
+  timing[i,"originalMerge"]= (proc.time()-time1)[3]
+  
+  # Get timing for myMerge function and insert into matrix:
+  time2 = proc.time()
+  myMerge_sort(seqToSort)
+  timing[i,"myMerge"]= (proc.time()-time2)[3]
+}
+
+# Do linear regression to check linearity of myMerge performance:
+reg=lm(myMerge ~ as.numeric(rownames(timing)), data=as.data.frame(timing))
+summary(reg)
+```
+
+    ## 
+    ## Call:
+    ## lm(formula = myMerge ~ as.numeric(rownames(timing)), data = as.data.frame(timing))
+    ## 
+    ## Residuals:
+    ##       Min        1Q    Median        3Q       Max 
+    ## -0.019309 -0.006205 -0.001067  0.003920  0.046772 
+    ## 
+    ## Coefficients:
+    ##                                Estimate Std. Error t value Pr(>|t|)    
+    ## (Intercept)                  -6.186e-03  3.253e-03  -1.902   0.0632 .  
+    ## as.numeric(rownames(timing))  6.834e-05  2.287e-06  29.887   <2e-16 ***
+    ## ---
+    ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+    ## 
+    ## Residual standard error: 0.01167 on 48 degrees of freedom
+    ## Multiple R-squared:  0.949,  Adjusted R-squared:  0.9479 
+    ## F-statistic: 893.2 on 1 and 48 DF,  p-value: < 2.2e-16
+
+``` r
+# Residuals:
+#       Min        1Q    Median        3Q       Max 
+# -0.018400 -0.005541 -0.001600  0.004859  0.027812 
+# 
+# Coefficients:
+#                                Estimate Std. Error t value Pr(>|t|)    
+# (Intercept)                  -1.149e-03  2.574e-03  -0.446    0.657    
+# as.numeric(rownames(timing))  6.635e-05  1.809e-06  36.675   <2e-16 ***
+# ---
+# Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+# 
+# Residual standard error: 0.009231 on 48 degrees of freedom
+# Multiple R-squared:  0.9655,  Adjusted R-squared:  0.9648 
+# F-statistic:  1345 on 1 and 48 DF,  p-value: < 2.2e-16
+
+#Plot the results:
+plot(rownames(timing), timing[,"originalMerge"], type="l", col="blue", main="myMerge  (red) vs. merge performance (blue)", xlab="Length of sequence to sort", ylab="Time (s)")
+points(rownames(timing), timing[,"myMerge"], col="red")
+abline(reg, col="red")
+```
+
+![](README_files/figure-markdown_github/merge-1.png)
+
+``` r
+#With an R-squared of 0.9648, myMerge is in linear time. The old merge function is roughly linear when the length of the sequence to sort is < 1500, but after that the time usage accelerates even more with increasing sequence length. I tried to sort even longer sequences to see how prounounced this difference becomes but the old merge function fails with ' Error: protect(): protection stack overflow' even after I set options(expressions = 100000). myMerge is still linear up to length = 10000
 ```
 
 ### Binary search
@@ -113,7 +326,14 @@ If you implement this exactly as described, you have to call recursively with a 
 #### Solution
 
 ``` r
-# WRITE YOUR IMPLEMENTATION AND TEST HERE.
+binary = function(x, sequence){
+  seq = myMerge_sort(sequence)
+  #Base case:
+  if (length(seq)==1 & x==seq[1]){
+    return(paste("The element", x, "is contained in the sequence"))
+  }
+  
+}
 ```
 
 ### More sorting
